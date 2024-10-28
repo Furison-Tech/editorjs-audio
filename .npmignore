@@ -1,0 +1,8 @@
+.idea/
+dev/
+src/
+.babelrc
+.eslintrc
+vite.config.js
+postcss.config.js
+yarn.lock

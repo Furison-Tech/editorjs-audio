@@ -1,0 +1,50 @@
+{
+  "name": "@furison-tech/editorjs-audio",
+  "version": "0.0.1",
+  "keywords": [
+    "codex editor",
+    "audio",
+    "editor.js",
+    "editorjs"
+  ],
+  "description": "Audio Tool for Editor.js",
+  "license": "MIT",
+  "repository": "https://github.com/Furison-Tech/editorjs-audio",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/image.umd.js",
+  "module": "./dist/image.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/image.mjs",
+      "require": "./dist/image.umd.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "author": {
+    "name": "Furison Tech",
+    "email": "info@furison.tech"
+  },
+  "devDependencies": {
+    "@codexteam/ajax": "^4.2.0",
+    "@editorjs/editorjs": "2.30.0-rc.12",
+    "formidable": "^3.5.1",
+    "postcss-nested": "^6.0.1",
+    "postcss-nested-ancestors": "^3.0.0",
+    "request": "^2.88.0",
+    "typescript": "^5.4.5",
+    "vite": "^5.3.1",
+    "vite-plugin-css-injected-by-js": "^3.5.1",
+    "vite-plugin-dts": "^3.9.1"
+  },
+  "dependencies": {
+    "@codexteam/icons": "^0.3.0"
+  },
+  "packageManager": "yarn@4.4.0+sha512.91d93b445d9284e7ed52931369bc89a663414e5582d00eea45c67ddc459a2582919eece27c412d6ffd1bd0793ff35399381cb229326b961798ce4f4cc60ddfdb"
+}
