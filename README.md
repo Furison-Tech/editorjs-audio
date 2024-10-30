@@ -4,7 +4,8 @@
 
 Audio Block for the [Editor.js](https://editorjs.io).
 
-![](https://capella.pics/63a03d04-3816-45b2-87b2-d85e556f0066.jpg)
+> [!NOTE]  
+> This tool is basically a copy of the [editor-js/image](https://github.com/editor-js/image) tool, rewritten to work with audio files, producing a HTML audio element.
 
 ## Features
 
@@ -32,8 +33,6 @@ Include module at your application
 ```javascript
 import AudioTool from '@furison-tech/editorjs-audio';
 ```
-
-Optionally, you can load this tool from [JsDelivr CDN](https://cdn.jsdelivr.net/npm/@editorjs/audio@latest)
 
 ## Usage
 
@@ -84,9 +83,14 @@ Note that if you don't implement your custom uploader methods, the `endpoints` p
 
 ## Tool's settings
 
-![](https://capella.pics/c74cdeec-3405-48ac-a960-f784188cf9b4.jpg)
+There is 1 block tune for configuring if an audio file can be downloaded or not.
 
-1. Configuring if an audio file can be downloaded
+> [!IMPORTANT]  
+> A html audio element is downloadable by default. 
+> The audio element the editor produces is NOT downloadable by default. 
+> But, the restriction of downloading is done via the [controlList](https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/controlsList) attribute, which is not universally supported yet.
+> Also note that this setting just determines if a download button should be shown or not on the audio element. 
+> A malicious visitor can always steal audio that is referenced in HTML.
 
 Add extra setting-buttons by adding them to the `actions`-array in the configuration:
 ```js
@@ -109,10 +113,10 @@ actions: [
 
 This Tool returns `data` with following format
 
-| Field       | Type      | Description                                                                              |
-|-------------| --------- |------------------------------------------------------------------------------------------|
+| Field       | Type      | Description                                                                               |
+|-------------| --------- |-------------------------------------------------------------------------------------------|
 | file        | `object`  | Uploaded file data. Any data got from backend uploader. Always contain the `url` property |
-| canDownload | `boolean` | Makes the audio downloadable or not                                                      |
+| canDownload | `boolean` | Indicates if the audio is downloadable or not                                             |
 
 
 ```json
@@ -120,7 +124,7 @@ This Tool returns `data` with following format
     "type" : "audio",
     "data" : {
         "file": {
-            "url" : "https://www.tesla.com/tesla_theme/assets/img/_vehicle_redesign/roadster_and_semi/roadster/hero.jpg"
+            "url" : "https://bangerly.com/community-content/samples/1-kick.mp3"
         },
         "canDownload" : true
     }
@@ -235,7 +239,7 @@ var editor = EditorJS({
               return {
                 success: 1,
                 file: {
-                  url: 'https://codex.so/upload/redactor_audios/o_80beea670e49f04931ce9e3b2122ac70.jpg',
+                  url: 'https://bangery.com/community-content/samples/1-kick.mp3',
                   // any other audio data you want to store, such as width, height, color, extension, etc
                 }
               };
@@ -253,7 +257,7 @@ var editor = EditorJS({
               return {
                 success: 1,
                 file: {
-                  url: 'https://codex.so/upload/redactor_audios/o_e48549d1855c7fc1807308dd14990126.jpg',
+                  url: 'https://bangery.com/community-content/samples/1-kick.mp3',
                   // any other audio data you want to store, such as width, height, color, extension, etc
                 }
               }
