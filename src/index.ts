@@ -104,7 +104,6 @@ export default class AudioTool implements BlockTool {
       additionalRequestHeaders: config.additionalRequestHeaders,
       field: config.field,
       types: config.types,
-      captionPlaceholder: this.api.i18n.t(config.captionPlaceholder ?? 'Caption'),
       buttonContent: config.buttonContent,
       uploader: config.uploader,
       actions: config.actions,
@@ -139,7 +138,6 @@ export default class AudioTool implements BlockTool {
      * Set saved state
      */
     this._data = {
-      caption: '',
       canDownload: false,
       file: {
         url: '',
@@ -177,7 +175,7 @@ export default class AudioTool implements BlockTool {
         icon: IconDownload,
         title: 'Can be downloaded',
         toggle: true,
-      }
+      },
     ];
   }
 
@@ -201,10 +199,6 @@ export default class AudioTool implements BlockTool {
    * Return Block data
    */
   public save(): AudioToolData {
-    const caption = this.ui.nodes.caption;
-
-    this._data.caption = caption.innerHTML;
-
     return this.data;
   }
 
@@ -308,11 +302,8 @@ export default class AudioTool implements BlockTool {
   private set data(data: AudioToolData) {
     this.image = data.file;
 
-    this._data.caption = data.caption || '';
-    this.ui.fillCaption(this._data.caption);
-
     AudioTool.tunes.forEach(({ name: tune }) => {
-      const value = typeof data[tune as keyof AudioToolData] !== 'undefined' ? data[tune as keyof AudioToolData] === true || data[tune as keyof AudioToolData] === 'true' : false;
+      const value = typeof data[tune as keyof AudioToolData] !== 'undefined' ? data[tune as keyof AudioToolData] === true : false;
 
       this.setTune(tune as keyof AudioToolData, value);
     });

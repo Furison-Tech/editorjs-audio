@@ -69,11 +69,6 @@ export interface UploadResponseFormat<AdditionalFileData = {}> {
  */
 export type AudioToolData<Actions = {}, AdditionalFileData = {}> = {
   /**
-   * Caption for the image.
-   */
-  caption: string;
-
-  /**
    * Flag indicating whether the audio file can be downloaded.
    */
   canDownload: boolean;
@@ -120,11 +115,6 @@ export interface AudioConfig {
    * Allowed mime-types for the uploaded image.
    */
   types?: string;
-
-  /**
-   * Placeholder text for the caption field.
-   */
-  captionPlaceholder?: string;
 
   /**
    * Additional data to send with requests.
