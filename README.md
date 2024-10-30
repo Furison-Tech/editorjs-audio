@@ -10,7 +10,7 @@ Audio Block for the [Editor.js](https://editorjs.io).
 
 - Uploading file from the device
 - Pasting copied content from the web
-- Pasting images by drag-n-drop
+- Pasting audios by drag-n-drop
 - Pasting files from Clipboard
 - Allows configuring if an audio file can be downloaded
 
@@ -33,7 +33,7 @@ Include module at your application
 import AudioTool from '@furison-tech/editorjs-audio';
 ```
 
-Optionally, you can load this tool from [JsDelivr CDN](https://cdn.jsdelivr.net/npm/@editorjs/image@latest)
+Optionally, you can load this tool from [JsDelivr CDN](https://cdn.jsdelivr.net/npm/@editorjs/audio@latest)
 
 ## Usage
 
@@ -42,8 +42,8 @@ Add a new Tool to the `tools` property of the Editor.js initial config.
 ```javascript
 import AudioTool from '@furison-tech/editorjs-audio';
 
-// or if you inject ImageTool via standalone script
-const AudioTool = window.ImageTool;
+// or if you inject AudioTool via standalone script
+const AudioTool = window.AudioTool;
 
 var editor = EditorJS({
   ...
@@ -67,13 +67,13 @@ var editor = EditorJS({
 
 ## Config Params
 
-Image Tool supports these configuration parameters:
+Audio Tool supports these configuration parameters:
 
 | Field | Type     | Description        |
 | ----- | -------- | ------------------ |
 | endpoints | `{byFile: string, byUrl: string}` | Endpoints for file uploading. <br> Contains 2 fields: <br> __byFile__ - for file uploading <br> __byUrl__ - for uploading by URL |
-| field | `string` | (default: `image`) Name of uploaded image field in POST request |
-| types | `string` | (default: `image/*`) Mime-types of files that can be [accepted with file selection](https://github.com/codex-team/ajax#accept-string).|
+| field | `string` | (default: `audio`) Name of uploaded audio field in POST request |
+| types | `string` | (default: `audio/*`) Mime-types of files that can be [accepted with file selection](https://github.com/codex-team/ajax#accept-string).|
 | additionalRequestData | `object` | Object with any data you want to send with uploading requests |
 | additionalRequestHeaders | `object` | Object with any custom headers which will be added to request. [See example](https://github.com/codex-team/ajax/blob/e5bc2a2391a18574c88b7ecd6508c29974c3e27f/README.md#headers-object) |
 | buttonContent | `string` | Allows to override HTML content of «Select file» button |
@@ -109,20 +109,20 @@ actions: [
 
 This Tool returns `data` with following format
 
-| Field       | Type      | Description                     |
-|-------------| --------- | ------------------------------- |
+| Field       | Type      | Description                                                                              |
+|-------------| --------- |------------------------------------------------------------------------------------------|
 | file        | `object`  | Uploaded file data. Any data got from backend uploader. Always contain the `url` property |
-| canDownload | `boolean` | add border to image             |
+| canDownload | `boolean` | Makes the audio downloadable or not                                                      |
 
 
 ```json
 {
-    "type" : "image",
+    "type" : "audio",
     "data" : {
         "file": {
             "url" : "https://www.tesla.com/tesla_theme/assets/img/_vehicle_redesign/roadster_and_semi/roadster/hero.jpg"
         },
-        "canDownload" : false
+        "canDownload" : true
     }
 }
 ```
@@ -132,7 +132,7 @@ This Tool returns `data` with following format
 This Tool works by one of the following schemes:
 
 1. Uploading files from the device
-2. Uploading by URL (handle image-like URL's pasting)
+2. Uploading by URL (handle audio-like URL's pasting)
 3. Uploading by drag-n-drop file
 4. Uploading by pasting from Clipboard
 
@@ -143,7 +143,7 @@ Scenario:
 1. User select file from the device
 2. Tool sends it to **your** backend (on `config.endpoints.byFile` route)
 3. Your backend should save file and return file data with JSON at specified format.
-4. Image tool shows saved image and stores server answer
+4. Audio tool shows saved audio and stores server answer
 
 So, you can implement backend for file saving by your own way. It is a specific and trivial task depending on your
 environment and stack.
@@ -164,7 +164,7 @@ The response of your uploader **should**  cover the following format:
 
 **success** - uploading status. 1 for successful, 0 for failed
 
-**file** - uploaded file data. **Must** contain an `url` field with full public path to the uploaded image.
+**file** - uploaded file data. **Must** contain an `url` field with full public path to the uploaded audio.
 Also, can contain any additional fields you want to store. For example, width, height, id etc.
 All additional fields will be saved at the `file` object of output data.
 
@@ -172,11 +172,11 @@ All additional fields will be saved at the `file` object of output data.
 
 Scenario:
 
-1. User pastes an URL of the image file to the Editor
-2. Editor pass pasted string to the Image Tool
+1. User pastes an URL of the audio file to the Editor
+2. Editor pass pasted string to the Audio Tool
 3. Tool sends it to **your** backend (on `config.endpoints.byUrl` route) via 'url' in request body
 4. Your backend should accept URL, **download and save the original file by passed URL** and return file data with JSON at specified format.
-5. Image tool shows saved image and stores server answer
+5. Audio tool shows saved audio and stores server answer
 
 The tool executes the request as `application/json` with the following request body:
 
@@ -192,7 +192,7 @@ Response of your uploader should be at the same format as described at «[Upload
 
 ### Uploading by drag-n-drop or from Clipboard
 
-Your backend will accept file as FormData object in field name, specified by `config.field` (by default, «`image`»).
+Your backend will accept file as FormData object in field name, specified by `config.field` (by default, «`audio`»).
 You should save it and return the same response format as described above.
 
 ## Providing custom uploading methods
@@ -204,28 +204,28 @@ Both methods must return a Promise that resolves with response in a format that 
 
 | Method         | Arguments | Return value | Description |
 | -------------- | --------- | -------------| ------------|
-| uploadByFile   | `File`    | `{Promise.<{success, file: {url}}>}` | Upload file to the server and return an uploaded image data |
-| uploadByUrl    | `string`  | `{Promise.<{success, file: {url}}>}` | Send URL-string to the server, that should load image by this URL and return an uploaded image data |
+| uploadByFile   | `File`    | `{Promise.<{success, file: {url}}>}` | Upload file to the server and return an uploaded audio data |
+| uploadByUrl    | `string`  | `{Promise.<{success, file: {url}}>}` | Send URL-string to the server, that should load audio by this URL and return an uploaded audio data |
 
 Example:
 
 ```js
-import ImageTool from '@editorjs/image';
+import AudioTool from '@editorjs/audio';
 
 var editor = EditorJS({
   ...
 
   tools: {
     ...
-    image: {
-      class: ImageTool,
+    audio: {
+      class: AudioTool,
       config: {
         /**
          * Custom uploader
          */
         uploader: {
           /**
-           * Upload file to the server and return an uploaded image data
+           * Upload file to the server and return an uploaded audio data
            * @param {File} file - file selected from the device or pasted by drag-n-drop
            * @return {Promise.<{success, file: {url}}>}
            */
@@ -235,16 +235,16 @@ var editor = EditorJS({
               return {
                 success: 1,
                 file: {
-                  url: 'https://codex.so/upload/redactor_images/o_80beea670e49f04931ce9e3b2122ac70.jpg',
-                  // any other image data you want to store, such as width, height, color, extension, etc
+                  url: 'https://codex.so/upload/redactor_audios/o_80beea670e49f04931ce9e3b2122ac70.jpg',
+                  // any other audio data you want to store, such as width, height, color, extension, etc
                 }
               };
             });
           },
 
           /**
-           * Send URL-string to the server. Backend should load image by this URL and return an uploaded image data
-           * @param {string} url - pasted image URL
+           * Send URL-string to the server. Backend should load audio by this URL and return an uploaded audio data
+           * @param {string} url - pasted audio URL
            * @return {Promise.<{success, file: {url}}>}
            */
           uploadByUrl(url){
@@ -253,8 +253,8 @@ var editor = EditorJS({
               return {
                 success: 1,
                 file: {
-                  url: 'https://codex.so/upload/redactor_images/o_e48549d1855c7fc1807308dd14990126.jpg',
-                  // any other image data you want to store, such as width, height, color, extension, etc
+                  url: 'https://codex.so/upload/redactor_audios/o_e48549d1855c7fc1807308dd14990126.jpg',
+                  // any other audio data you want to store, such as width, height, color, extension, etc
                 }
               }
             })

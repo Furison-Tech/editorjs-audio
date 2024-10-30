@@ -1,11 +1,11 @@
 /**
- * Sample HTTP server for accept uploaded images
+ * Sample HTTP server for accept uploaded audios
  * [!] Use it only for debugging purposes
  *
  * How to use [requires Node.js 10.0.0+ and npm install]:
  *
  * 1. $ node dev/server.js
- * 2. set 'endpoints' at the Image Tools 'config' in example.html
+ * 2. set 'endpoints' at the Audio Tools 'config' in example.html
  *   endpoints : {
  *      byFile: 'http://localhost:8008/uploadFile',
  *      byUrl: 'http://localhost:8008/fetchUrl'
@@ -86,13 +86,13 @@ class ServerExample {
 
     this.getForm(request)
       .then(({files}) => {
-        let image = files[this.fieldName][0] || {};
+        let audio = files[this.fieldName][0] || {};
 
         responseJson.success = 1;
         responseJson.file = {
-          url: 'file://' + image.filepath,
-          name: image.newFilename,
-          size: image.size
+          url: 'file://' + audio.filepath,
+          name: audio.newFilename,
+          size: audio.size
         };
       })
       .catch((error) => {
@@ -123,7 +123,7 @@ class ServerExample {
         
         let filename = this.uploadDir + '/' + this.md5(url) + `.${extension}`;
 
-        return this.downloadImage(url, filename)
+        return this.downloadAudio(url, filename)
           .then((path) => {
             responseJson.success = 1;
             responseJson.file = {
@@ -167,12 +167,12 @@ class ServerExample {
   }
 
   /**
-   * Download image by Url
+   * Download audio by Url
    * @param {string} uri - endpoint
    * @param {string} filename - path for file saving
    * @return {Promise<string>} - filename
    */
-  downloadImage(uri, filename) {
+  downloadAudio(uri, filename) {
     return new Promise((resolve, reject) => {
       request.head(uri, function (err, res, body) {
         request(uri).pipe(fs.createWriteStream(filename).on('erorr', reject))
@@ -195,5 +195,5 @@ class ServerExample {
 
 new ServerExample({
   port: 8008,
-  fieldName: 'image'
+  fieldName: 'audio'
 });

@@ -8,17 +8,17 @@ import type { AudioToolData, AudioConfig } from './types/types';
  */
 enum UiState {
   /**
-   * The UI is in an empty state, with no image loaded or being uploaded.
+   * The UI is in an empty state, with no audio loaded or being uploaded.
    */
   Empty = 'empty',
 
   /**
-   * The UI is in an uploading state, indicating an image is currently being uploaded.
+   * The UI is in an uploading state, indicating an audio is currently being uploaded.
    */
   Uploading = 'uploading',
 
   /**
-   * The UI is in a filled state, with an image successfully loaded.
+   * The UI is in a filled state, with an audio successfully loaded.
    */
   Filled = 'filled'
 };
@@ -33,9 +33,9 @@ interface Nodes {
   wrapper: HTMLElement;
 
   /**
-   * Container for the image element in the UI.
+   * Container for the audio element in the UI.
    */
-  imageContainer: HTMLElement;
+  audioContainer: HTMLElement;
 
   /**
    * Button for selecting files.
@@ -43,14 +43,14 @@ interface Nodes {
   fileButton: HTMLElement;
 
   /**
-   * Represents the image element in the UI, if one is present; otherwise, it's undefined.
+   * Represents the audio element in the UI, if one is present; otherwise, it's undefined.
    */
-  imageEl?: HTMLElement;
+  audioEl?: HTMLElement;
 
   /**
-   * Preloader element for the image.
+   * Preloader element for the audio.
    */
-  imagePreloader: HTMLElement;
+  audioPreloader: HTMLElement;
 }
 
 /**
@@ -62,7 +62,7 @@ interface ConstructorParams {
    */
   api: API;
   /**
-   * Configuration for the image.
+   * Configuration for the audio.
    */
   config: AudioConfig;
   /**
@@ -93,7 +93,7 @@ export default class Ui {
   private api: API;
 
   /**
-   * Configuration for the image tool.
+   * Configuration for the audio tool.
    */
   private config: AudioConfig;
 
@@ -108,7 +108,7 @@ export default class Ui {
   private readOnly: boolean;
 
   /**
-   * @param ui - image tool Ui module
+   * @param ui - audio tool Ui module
    * @param ui.api - Editor.js API
    * @param ui.config - user config
    * @param ui.onSelectFile - callback for clicks on Select file button
@@ -121,23 +121,23 @@ export default class Ui {
     this.readOnly = readOnly;
     this.nodes = {
       wrapper: make('div', [this.CSS.baseClass, this.CSS.wrapper]),
-      imageContainer: make('div', [this.CSS.imageContainer]),
+      audioContainer: make('div', [this.CSS.audioContainer]),
       fileButton: this.createFileButton(),
-      imageEl: undefined,
-      imagePreloader: make('div', this.CSS.imagePreloader),
+      audioEl: undefined,
+      audioPreloader: make('div', this.CSS.audioPreloader),
     };
 
     /**
      * Create base structure
      *  <wrapper>
-     *    <image-container>
-     *      <image-preloader />
-     *    </image-container>
+     *    <audio-container>
+     *      <audio-preloader />
+     *    </audio-container>
      *    <select-file-button />
      *  </wrapper>
      */
-    this.nodes.imageContainer.appendChild(this.nodes.imagePreloader);
-    this.nodes.wrapper.appendChild(this.nodes.imageContainer);
+    this.nodes.audioContainer.appendChild(this.nodes.audioPreloader);
+    this.nodes.wrapper.appendChild(this.nodes.audioContainer);
     this.nodes.wrapper.appendChild(this.nodes.fileButton);
   }
 
@@ -147,6 +147,10 @@ export default class Ui {
    * @param status - true for enable, false for disable
    */
   public applyTune(tuneName: string, status: boolean): void {
+    if (tuneName === "canDownload"){
+       const controlListValue = status ? "" : "nodownload";
+       this.nodes.audioEl?.setAttribute("controlsList", controlListValue);
+    }
     this.nodes.wrapper.classList.toggle(`${this.CSS.wrapper}--${tuneName}`, status);
   }
 
@@ -179,31 +183,32 @@ export default class Ui {
   }
 
   /**
-   * Shows an image
-   * @param url - image source
+   * Shows an audio
+   * @param url - audio source
    */
-  public fillImage(url: string): void {
+  public fillAudio(url: string): void {
     /**
      * Check for a source extension to compose element correctly: video tag for mp4, img — for others
      */
     const attributes: { [key: string]: string | boolean } = {
         src: url,
         controls: true,
+        controlsList: "nodownload",
     };
 
     /**
      * Compose tag with defined attributes
      */
-    this.nodes.imageEl = make("AUDIO", this.CSS.imageEl, attributes);
+    this.nodes.audioEl = make("AUDIO", this.CSS.audioEl, attributes);
 
     /**
      * Add load event listener
      */
-    this.nodes.imageEl.addEventListener('loadeddata', () => {
+    this.nodes.audioEl.addEventListener('loadeddata', () => {
       this.toggleStatus(UiState.Filled);
     });
 
-    this.nodes.imageContainer.appendChild(this.nodes.imageEl);
+    this.nodes.audioContainer.appendChild(this.nodes.audioEl);
   }
 
   /**
@@ -220,9 +225,9 @@ export default class Ui {
        * Tool's classes
        */
       wrapper: 'audio-tool',
-      imageContainer: 'audio-tool__audio',
-      imagePreloader: 'audio-tool__audio-preloader',
-      imageEl: 'audio-tool__audio-player',
+      audioContainer: 'audio-tool__audio',
+      audioPreloader: 'audio-tool__audio-preloader',
+      audioEl: 'audio-tool__audio-player',
     };
   };
 

@@ -1,34 +1,3 @@
-/**
- * Image Tool for the Editor.js
- * @author CodeX <team@codex.so>
- * @license MIT
- * @see {@link https://github.com/editor-js/image}
- *
- * To developers.
- * To simplify Tool structure, we split it to 4 parts:
- *  1) index.ts — main Tool's interface, public API and methods for working with data
- *  2) uploader.ts — module that has methods for sending files via AJAX: from device, by URL or File pasting
- *  3) ui.ts — module for UI manipulations: render, showing preloader, etc
- *  4) tunes.js — working with Block Tunes: render buttons, handle clicks
- *
- * For debug purposes there is a testing server
- * that can save uploaded files and return a Response {@link UploadResponseFormat}
- *
- *       $ node dev/server.js
- *
- * It will expose 8008 port, so you can pass http://localhost:8008 with the Tools config:
- *
- * image: {
- *   class: ImageTool,
- *   config: {
- *     endpoints: {
- *       byFile: 'http://localhost:8008/uploadFile',
- *       byUrl: 'http://localhost:8008/fetchUrl',
- *     }
- *   },
- * },
- */
-
 import type { TunesMenuConfig } from '@editorjs/editorjs/types/tools';
 import type { API, ToolboxConfig, PasteConfig, BlockToolConstructorOptions, BlockTool, BlockAPI, PasteEvent, PatternPasteEventDetail, FilePasteEventDetail } from '@editorjs/editorjs';
 import './index.css';
@@ -38,13 +7,13 @@ import Uploader from './uploader';
 
 import type { ActionConfig, UploadResponseFormat, AudioToolData, AudioConfig, HTMLPasteEventDetailExtended, AudioSetterParam } from './types/types';
 
-type ImageToolConstructorOptions = BlockToolConstructorOptions<AudioToolData, AudioConfig>;
+type AudioToolConstructorOptions = BlockToolConstructorOptions<AudioToolData, AudioConfig>;
 
 const IconDownload = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>';
 const IconMusic =    '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" d="m9 9 10.5-3m0 6.553v3.75a2.25 2.25 0 0 1-1.632 2.163l-1.32.377a1.803 1.803 0 1 1-.99-3.467l2.31-.66a2.25 2.25 0 0 0 1.632-2.163Zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 0 1-1.632 2.163l-1.32.377a1.803 1.803 0 0 1-.99-3.467l2.31-.66A2.25 2.25 0 0 0 9 15.553Z" /></svg>';
 
 /**
- * Implementation of ImageTool class
+ * Implementation of AudioTool class
  */
 export default class AudioTool implements BlockTool {
   /**
@@ -63,7 +32,7 @@ export default class AudioTool implements BlockTool {
   private block: BlockAPI;
 
   /**
-   * Configuration for the ImageTool
+   * Configuration for the AudioTool
    */
   private config: AudioConfig;
 
@@ -90,7 +59,7 @@ export default class AudioTool implements BlockTool {
    * @param tool.readOnly - read-only mode flag
    * @param tool.block - current Block API
    */
-  constructor({ data, config, api, readOnly, block }: ImageToolConstructorOptions) {
+  constructor({ data, config, api, readOnly, block }: AudioToolConstructorOptions) {
     this.api = api;
     this.readOnly = readOnly;
     this.block = block;
@@ -166,7 +135,7 @@ export default class AudioTool implements BlockTool {
   }
 
   /**
-   * Available image tools
+   * Available audio tools
    */
   public static get tunes(): Array<ActionConfig> {
     return [
@@ -187,7 +156,7 @@ export default class AudioTool implements BlockTool {
   }
 
   /**
-   * Validate data: check if Image exists
+   * Validate data: check if Audio exists
    * @param savedData — data received after saving
    * @returns false if saved data is not correct, otherwise true
    */
@@ -203,12 +172,12 @@ export default class AudioTool implements BlockTool {
   }
 
   /**
-   * Returns configuration for block tunes: add background, add border, stretch image
+   * Returns configuration for block tunes: can download audio
    * @returns TunesMenuConfig
    */
   public renderSettings(): TunesMenuConfig {
     // Merge default tunes with the ones that might be added by user
-    // @see https://github.com/editor-js/image/pull/49
+    // @see https://github.com/editor-js/audio/pull/49
     const tunes = AudioTool.tunes.concat(this.config.actions || []);
 
     return tunes.map(tune => ({
@@ -230,7 +199,7 @@ export default class AudioTool implements BlockTool {
   }
 
   /**
-   * Fires after clicks on the Toolbox Image Icon
+   * Fires after clicks on the Toolbox Audio Icon
    * Initiates click on the Select File button
    */
   public appendCallback(): void {
@@ -248,14 +217,14 @@ export default class AudioTool implements BlockTool {
        */
       tags: [
         {
-          img: { src: true },
+          audio: { src: true, controls: true },
         },
       ],
       /**
-       * Paste URL of image into the Editor
+       * Paste URL of audio into the Editor
        */
       patterns: {
-        image: /https?:\/\/\S+\.(wav|mp3|ogg)(\?[a-z0-9=]*)?$/i,
+        audio: /https?:\/\/\S+\.(wav|mp3|ogg)(\?[a-z0-9=]*)?$/i,
       },
 
       /**
@@ -297,10 +266,10 @@ export default class AudioTool implements BlockTool {
 
   /**
    * Stores all Tool's data
-   * @param data - data in Image Tool format
+   * @param data - data in Audio Tool format
    */
   private set data(data: AudioToolData) {
-    this.image = data.file;
+    this.audio = data.file;
 
     AudioTool.tunes.forEach(({ name: tune }) => {
       const value = typeof data[tune as keyof AudioToolData] !== 'undefined' ? data[tune as keyof AudioToolData] === true : false;
@@ -317,14 +286,14 @@ export default class AudioTool implements BlockTool {
   }
 
   /**
-   * Set new image file
+   * Set new audio file
    * @param file - uploaded file data
    */
-  private set image(file: AudioSetterParam | undefined) {
+  private set audio(file: AudioSetterParam | undefined) {
     this._data.file = file || { url: '' };
 
     if (file && file.url) {
-      this.ui.fillImage(file.url);
+      this.ui.fillAudio(file.url);
     }
   }
 
@@ -334,7 +303,7 @@ export default class AudioTool implements BlockTool {
    */
   private onUpload(response: UploadResponseFormat): void {
     if (response.success && Boolean(response.file)) {
-      this.image = response.file;
+      this.audio = response.file;
     } else {
       this.uploadingFailed('incorrect response: ' + JSON.stringify(response));
     }
@@ -375,7 +344,7 @@ export default class AudioTool implements BlockTool {
   }
 
   /**
-   * Show preloader and upload image file
+   * Show preloader and upload audio file
    * @param file - file that is currently uploading (from paste)
    */
   private uploadFile(file: Blob): void {
@@ -387,7 +356,7 @@ export default class AudioTool implements BlockTool {
   }
 
   /**
-   * Show preloader and upload image by target url
+   * Show preloader and upload audio by target url
    * @param url - url pasted
    */
   private uploadUrl(url: string): void {

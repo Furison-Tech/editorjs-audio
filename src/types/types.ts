@@ -13,7 +13,7 @@ export interface UploadOptions {
 }
 
 /**
- * User configuration of Image block tunes. Allows to add custom tunes through the config
+ * User configuration of Audio block tunes. Allows to add custom tunes through the config
  */
 export interface ActionConfig {
   /**
@@ -58,14 +58,14 @@ export interface UploadResponseFormat<AdditionalFileData = {}> {
    */
   file: {
     /**
-     * The URL of the uploaded image.
+     * The URL of the uploaded audio.
      */
     url: string;
   } & AdditionalFileData;
 }
 
 /**
- * ImageToolData type representing the input and output data format for the image tool, including optional custome actions.
+ * AudioToolData type representing the input and output data format for the audio tool, including optional custome actions.
  */
 export type AudioToolData<Actions = {}, AdditionalFileData = {}> = {
   /**
@@ -74,12 +74,12 @@ export type AudioToolData<Actions = {}, AdditionalFileData = {}> = {
   canDownload: boolean;
 
   /**
-   * Object containing the URL of the image file.
+   * Object containing the URL of the audio file.
    * Also can contain any additional data.
    */
   file: {
     /**
-     * The URL of the image.
+     * The URL of the audio.
      */
     url: string;
   } & AdditionalFileData;
@@ -107,12 +107,12 @@ export interface AudioConfig {
   };
 
   /**
-   * Field name for the uploaded image.
+   * Field name for the uploaded audio.
    */
   field?: string;
 
   /**
-   * Allowed mime-types for the uploaded image.
+   * Allowed mime-types for the uploaded audio.
    */
   types?: string;
 
@@ -137,12 +137,12 @@ export interface AudioConfig {
   uploader?: {
 
     /**
-     * Method to upload an image by file.
+     * Method to upload an audio by file.
      */
     uploadByFile?: (file: Blob) => Promise<UploadResponseFormat>;
 
     /**
-     * Method to upload an image by URL.
+     * Method to upload an audio by URL.
      */
     uploadByUrl?: (url: string) => Promise<UploadResponseFormat>;
   };
@@ -159,22 +159,22 @@ export interface AudioConfig {
  */
 export interface HTMLPasteEventDetailExtended extends HTMLPasteEventDetail {
   /**
-   * The data property containing the source of the image and HTML element details.
+   * The data property containing the source of the audio and HTML element details.
    */
   data: {
     /**
-     * The source URL of the pasted image.
+     * The source URL of the pasted audio.
      */
     src: string;
   } & HTMLElement;
 }
 
 /**
- * Parameter type of Image setter function in ImageTool
+ * Parameter type of Audio setter function in AudioTool
  */
 export type AudioSetterParam = {
   /**
-   * url path of the image
+   * url path of the audio
    */
   url: string;
 };

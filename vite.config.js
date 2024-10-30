@@ -12,8 +12,8 @@ export default {
     copyPublicDir: false,
     lib: {
       entry: path.resolve(__dirname, "src", "index.ts"),
-      name: "ImageTool",
-      fileName: "image",
+      name: "AudioTool",
+      fileName: "audio",
     }
   },
   define: {

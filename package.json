@@ -13,13 +13,13 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/image.umd.js",
-  "module": "./dist/image.mjs",
+  "main": "./dist/audio.umd.js",
+  "module": "./dist/audio.mjs",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/image.mjs",
-      "require": "./dist/image.umd.js",
+      "import": "./dist/audio.mjs",
+      "require": "./dist/audio.umd.js",
       "types": "./dist/index.d.ts"
     }
   },
